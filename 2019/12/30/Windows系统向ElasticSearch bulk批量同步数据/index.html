@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>Windows系统向ElasticSearch bulk批量同步数据 | Learning Paradise</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Windows系统向ElasticSearch bulk批量同步数据我们知道，通过API可以实现对ElasticSearch批量增删查改操作。但是，常用的head或kopf插件对于批处理操作则显得心有余而力不足。本文将详细介绍一种不依赖于API的批量处理方式。 1.整体思路 保存需要批量处理的数据到json文件 通过crud命令向ES服务器发送_bulk请求  #保存需要批量操作的数据到json文">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Windows系统向ElasticSearch bulk批量同步数据">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;12&#x2F;30&#x2F;Windows%E7%B3%BB%E7%BB%9F%E5%90%91ElasticSearch%20bulk%E6%89%B9%E9%87%8F%E5%90%8C%E6%AD%A5%E6%95%B0%E6%8D%AE&#x2F;index.html">
+<meta property="og:site_name" content="Learning Paradise">
+<meta property="og:description" content="Windows系统向ElasticSearch bulk批量同步数据我们知道，通过API可以实现对ElasticSearch批量增删查改操作。但是，常用的head或kopf插件对于批处理操作则显得心有余而力不足。本文将详细介绍一种不依赖于API的批量处理方式。 1.整体思路 保存需要批量处理的数据到json文件 通过crud命令向ES服务器发送_bulk请求  #保存需要批量操作的数据到json文">
+<meta property="og:image" content="https:&#x2F;&#x2F;upload-images.jianshu.io&#x2F;upload_images&#x2F;15990705-a54da01afa7cd929.jpg?imageMogr2&#x2F;auto-orient&#x2F;strip%7CimageView2&#x2F;2&#x2F;w&#x2F;1240">
+<meta property="og:image" content="https:&#x2F;&#x2F;upload-images.jianshu.io&#x2F;upload_images&#x2F;15990705-361c8eb93badf07d.png?imageMogr2&#x2F;auto-orient&#x2F;strip%7CimageView2&#x2F;2&#x2F;w&#x2F;1240">
+<meta property="og:image" content="https:&#x2F;&#x2F;upload-images.jianshu.io&#x2F;upload_images&#x2F;15990705-c9c324acfd25dc1e.png?imageMogr2&#x2F;auto-orient&#x2F;strip%7CimageView2&#x2F;2&#x2F;w&#x2F;1240">
+<meta property="og:image" content="https:&#x2F;&#x2F;upload-images.jianshu.io&#x2F;upload_images&#x2F;15990705-0ee0673429699934.png?imageMogr2&#x2F;auto-orient&#x2F;strip%7CimageView2&#x2F;2&#x2F;w&#x2F;1240">
+<meta property="og:image" content="https:&#x2F;&#x2F;upload-images.jianshu.io&#x2F;upload_images&#x2F;15990705-8b3c2f4b1fa7c970.png?imageMogr2&#x2F;auto-orient&#x2F;strip%7CimageView2&#x2F;2&#x2F;w&#x2F;1240">
+<meta property="og:image" content="https:&#x2F;&#x2F;upload-images.jianshu.io&#x2F;upload_images&#x2F;15990705-bf8ace7f6e6e7086.png?imageMogr2&#x2F;auto-orient&#x2F;strip%7CimageView2&#x2F;2&#x2F;w&#x2F;1240">
+<meta property="og:image" content="https:&#x2F;&#x2F;upload-images.jianshu.io&#x2F;upload_images&#x2F;15990705-7ae9d3234ffef3d0.jpg?imageMogr2&#x2F;auto-orient&#x2F;strip%7CimageView2&#x2F;2&#x2F;w&#x2F;1240">
+<meta property="og:image" content="https:&#x2F;&#x2F;upload-images.jianshu.io&#x2F;upload_images&#x2F;15990705-163bc7f95fcbaedd.png?imageMogr2&#x2F;auto-orient&#x2F;strip%7CimageView2&#x2F;2&#x2F;w&#x2F;1240">
+<meta property="og:image" content="https:&#x2F;&#x2F;upload-images.jianshu.io&#x2F;upload_images&#x2F;15990705-be1bbba1ddc8bfe9.jpg?imageMogr2&#x2F;auto-orient&#x2F;strip%7CimageView2&#x2F;2&#x2F;w&#x2F;1240">
+<meta property="article:published_time" content="2019-12-30T12:28:10.067Z">
+<meta property="article:modified_time" content="2019-12-30T12:18:09.876Z">
+<meta property="article:author" content="Damon Liu">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;upload-images.jianshu.io&#x2F;upload_images&#x2F;15990705-a54da01afa7cd929.jpg?imageMogr2&#x2F;auto-orient&#x2F;strip%7CimageView2&#x2F;2&#x2F;w&#x2F;1240">
+  
+    <link rel="alternate" href="/atom.xml" title="Learning Paradise" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 4.1.1"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Learning Paradise</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-Windows系统向ElasticSearch bulk批量同步数据" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/12/30/Windows%E7%B3%BB%E7%BB%9F%E5%90%91ElasticSearch%20bulk%E6%89%B9%E9%87%8F%E5%90%8C%E6%AD%A5%E6%95%B0%E6%8D%AE/" class="article-date">
+  <time datetime="2019-12-30T12:28:10.067Z" itemprop="datePublished">2019-12-30</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Windows系统向ElasticSearch bulk批量同步数据
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="Windows系统向ElasticSearch-bulk批量同步数据"><a href="#Windows系统向ElasticSearch-bulk批量同步数据" class="headerlink" title="Windows系统向ElasticSearch bulk批量同步数据"></a>Windows系统向ElasticSearch bulk批量同步数据</h1><p>我们知道，通过API可以实现对ElasticSearch批量增删查改操作。但是，常用的head或kopf插件对于批处理操作则显得心有余而力不足。本文将详细介绍一种不依赖于API的批量处理方式。</p>
+<h2 id="1-整体思路"><a href="#1-整体思路" class="headerlink" title="1.整体思路"></a>1.整体思路</h2><ul>
+<li>保存需要批量处理的数据到json文件</li>
+<li>通过crud命令向ES服务器发送_bulk请求</li>
+</ul>
+<p>#保存需要批量操作的数据到json文件<br><img src="https://upload-images.jianshu.io/upload_images/15990705-a54da01afa7cd929.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""><br>文件格式如下：<br>{“index”:{“_index”: “test_damon_v1”, “_type”: “test_damon”, “_id”:”4”}}<br>{“plant”: “F131”,”stb_version”: “4444444444”}<br>两行数据构成了一次操作，第一行是操作类型可以index，create，update；第二行就是我们的可选的数据体。<br>如果是delete操作，只有一行数据，因为只需要提供一个id即可。<br>注意：</p>
+<ul>
+<li>每一行数据结束，必须换行，否则对应数据会执行失败</li>
+<li>官方建议 bulk 批次最好不要超过15MB</li>
+</ul>
+<h2 id="2-Windows系统安装curl"><a href="#2-Windows系统安装curl" class="headerlink" title="2.Windows系统安装curl"></a>2.Windows系统安装curl</h2><ul>
+<li>curl下载地址：<a href="https://curl.haxx.se/download.html" target="_blank" rel="noopener"><u>https://curl.haxx.se/download.html</u></a><br>建议下载如图所示版本：<br><img src="https://upload-images.jianshu.io/upload_images/15990705-361c8eb93badf07d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""><br>下载完成以后是一个后缀名为.cab的文件；然后解压缩。<br><img src="https://upload-images.jianshu.io/upload_images/15990705-c9c324acfd25dc1e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></li>
+<li>配置环境变量<br><img src="https://upload-images.jianshu.io/upload_images/15990705-0ee0673429699934.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""><br><img src="https://upload-images.jianshu.io/upload_images/15990705-8b3c2f4b1fa7c970.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></li>
+<li>检测是否安装成功<br>在cmd界面输入命令curl –help，显示如下图，则表示安装成功。<br><img src="https://upload-images.jianshu.io/upload_images/15990705-bf8ace7f6e6e7086.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></li>
+</ul>
+<h2 id="3-使用curl向ES服务器发送请求"><a href="#3-使用curl向ES服务器发送请求" class="headerlink" title="3.使用curl向ES服务器发送请求"></a>3.使用curl向ES服务器发送请求</h2><ul>
+<li>cmd进入curl\I386路径以后执行以下命令，@后面是你的json文件所在的位置。<br>curl -l -H “Content-Type:application/json” -H “Accept:application/json” -XPOST localhost:9200/_bulk?pretty –data-binary  @C:\Users\Desktop\test.json<br>如下图所示：<br><img src="https://upload-images.jianshu.io/upload_images/15990705-7ae9d3234ffef3d0.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""><br>若出现以下结果，则表示处理成功：<br><img src="https://upload-images.jianshu.io/upload_images/15990705-163bc7f95fcbaedd.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></li>
+<li>验证数据是否同步成功<br>进入ES的head插件，我们批量处理，插入的数据是id为4和5的数据。<br>查询结果如下：<br><img src="https://upload-images.jianshu.io/upload_images/15990705-be1bbba1ddc8bfe9.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/12/30/Windows%E7%B3%BB%E7%BB%9F%E5%90%91ElasticSearch%20bulk%E6%89%B9%E9%87%8F%E5%90%8C%E6%AD%A5%E6%95%B0%E6%8D%AE/" data-id="ck4sfad6a0001nsv1hbkx4aio" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2019/12/30/ElasticSearch%E5%B8%B8%E7%94%A8%E7%9A%84%E5%A2%9E%E5%88%A0%E6%9F%A5%E6%94%B9%E6%93%8D%E4%BD%9C/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          ElasticSearch常用的增删查改操作
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/12/18/Docker%E7%AE%80%E4%BB%8B%E5%8F%8A%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Docker简介及环境搭建</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/12/30/ElasticSearch%E5%B8%B8%E7%94%A8%E7%9A%84%E5%A2%9E%E5%88%A0%E6%9F%A5%E6%94%B9%E6%93%8D%E4%BD%9C/">ElasticSearch常用的增删查改操作</a>
+          </li>
+        
+          <li>
+            <a href="/2019/12/30/Windows%E7%B3%BB%E7%BB%9F%E5%90%91ElasticSearch%20bulk%E6%89%B9%E9%87%8F%E5%90%8C%E6%AD%A5%E6%95%B0%E6%8D%AE/">Windows系统向ElasticSearch bulk批量同步数据</a>
+          </li>
+        
+          <li>
+            <a href="/2019/12/18/Docker%E7%AE%80%E4%BB%8B%E5%8F%8A%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/">Docker简介及环境搭建</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 Damon Liu<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>
