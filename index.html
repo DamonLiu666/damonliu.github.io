@@ -63,9 +63,77 @@
       <div class="outer">
         <section id="main">
   
-    <article id="post-ElasticSearch常用的增删查改操作" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-2.Docker 常用操作" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2019/12/30/ElasticSearch%E5%B8%B8%E7%94%A8%E7%9A%84%E5%A2%9E%E5%88%A0%E6%9F%A5%E6%94%B9%E6%93%8D%E4%BD%9C/" class="article-date">
+    <a href="/2020/01/06/2.Docker%20%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C/" class="article-date">
+  <time datetime="2020-01-06T12:58:29.733Z" itemprop="datePublished">2020-01-06</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/01/06/2.Docker%20%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C/">2.Docker 常用操作</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="Docker-常用操作"><a href="#Docker-常用操作" class="headerlink" title="Docker 常用操作"></a>Docker 常用操作</h1><h2 id="1-安装镜像"><a href="#1-安装镜像" class="headerlink" title="1.安装镜像"></a>1.安装镜像</h2><p>以mysql为例</p>
+<h3 id="查询镜像"><a href="#查询镜像" class="headerlink" title="查询镜像"></a>查询镜像</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker search mysql</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:%5CUsers%5Cliujun%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1577711432781.png" alt="1577711432781"></p>
+<p>注意：OFFICIAL这一栏位带有“OK”的，是官方镜像</p>
+<h3 id="拉取镜像"><a href="#拉取镜像" class="headerlink" title="拉取镜像"></a>拉取镜像</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull mysql</span><br></pre></td></tr></table></figure>
+
+<p>此时下载的是latest版本的镜像</p>
+<h3 id="拉取指定版本的镜像"><a href="#拉取指定版本的镜像" class="headerlink" title="拉取指定版本的镜像"></a>拉取指定版本的镜像</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull mysql:5.5</span><br></pre></td></tr></table></figure>
+
+<p>拉取指定版本的镜像，需要带上对应的tag</p>
+<p>tag可以到docker hub 查找( <a href="https://hub.docker.com/" target="_blank" rel="noopener">https://hub.docker.com/</a> )</p>
+<h3 id="查看安装好的镜像"><a href="#查看安装好的镜像" class="headerlink" title="查看安装好的镜像"></a>查看安装好的镜像</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker images</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:%5CUsers%5Cliujun%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1577715029994.png" alt="1577715029994"></p>
+<h3 id="删除docker-镜像"><a href="#删除docker-镜像" class="headerlink" title="删除docker 镜像"></a>删除docker 镜像</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker rmi XXX</span><br></pre></td></tr></table></figure>
+
+<p>删除的时候，需带上对应的image id</p>
+<h2 id="2-容器操作"><a href="#2-容器操作" class="headerlink" title="2.容器操作"></a>2.容器操作</h2><p>软件镜像—-&gt;运行镜像—-&gt;产生一个容器(正在运行的软件)</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">1.搜索镜像</span><br><span class="line">	docker search tomcat</span><br><span class="line">2.拉取镜像</span><br><span class="line">	docker pull tomcat</span><br><span class="line">3.启动容器</span><br><span class="line">	docker run --name mytomcat -d tomcat:latest</span><br><span class="line">	(--name后面的名称自己取；	-d 表示后台运行)</span><br><span class="line">4.查看运行的容器</span><br><span class="line">	docker ps</span><br><span class="line">5.停止正在运行的容器</span><br><span class="line">	docker stop mytomcat</span><br><span class="line">6.查看所有的容器(包括运行中的和已停止的)</span><br><span class="line">	docker ps -a</span><br><span class="line">7.重新启动容器</span><br><span class="line">	docker start 容器id</span><br><span class="line">8.删除容器</span><br><span class="line">	docker rm 容器id</span><br><span class="line">9.启动一个做了端口映射的容器</span><br><span class="line">	docker run --name mytomcat -d -p 8888:8080 tomcat:latest</span><br><span class="line">	-p 将主机的一个端口映射到容器的端口			主机端口:容器内部的端口</span><br><span class="line">10.查看容器日志</span><br><span class="line">	docker logs 容器id</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:%5CUsers%5Cliujun%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1577718924925.png" alt="1577718924925"></p>
+<p>第9步启动后，通过访问虚拟机IP地址+8888端口，可以查看tomcat是否启动成功</p>
+<p><img src="C:%5CUsers%5Cliujun%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1577719013811.png" alt="1577719013811"></p>
+<p>注意:如果访问tomcat失败，查看linux防火墙状态</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">service firewalld status		查看防火墙状态</span><br><span class="line">service firewalld stop			关闭防火墙</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="3-安装mysql"><a href="#3-安装mysql" class="headerlink" title="3.安装mysql"></a>3.安装mysql</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">docker pull mysql:5.7</span><br><span class="line"></span><br><span class="line">docker run -p 3306:3306 --name mysql01 -e MYSQL_ROOT_PASSWORD=123456 -d mysql:5.7</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:%5CUsers%5Cliujun%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1578315011651.png" alt="1578315011651"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/01/06/2.Docker%20%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C/" data-id="ck52gfk3i000068v1eaxw4pes" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-4.ElasticSearch常用的增删查改操作" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/12/30/4.ElasticSearch%E5%B8%B8%E7%94%A8%E7%9A%84%E5%A2%9E%E5%88%A0%E6%9F%A5%E6%94%B9%E6%93%8D%E4%BD%9C/" class="article-date">
   <time datetime="2019-12-30T12:28:10.070Z" itemprop="datePublished">2019-12-30</time>
 </a>
     
@@ -77,7 +145,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2019/12/30/ElasticSearch%E5%B8%B8%E7%94%A8%E7%9A%84%E5%A2%9E%E5%88%A0%E6%9F%A5%E6%94%B9%E6%93%8D%E4%BD%9C/">ElasticSearch常用的增删查改操作</a>
+      <a class="article-title" href="/2019/12/30/4.ElasticSearch%E5%B8%B8%E7%94%A8%E7%9A%84%E5%A2%9E%E5%88%A0%E6%9F%A5%E6%94%B9%E6%93%8D%E4%BD%9C/">4.ElasticSearch常用的增删查改操作</a>
     </h1>
   
 
@@ -119,7 +187,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/12/30/ElasticSearch%E5%B8%B8%E7%94%A8%E7%9A%84%E5%A2%9E%E5%88%A0%E6%9F%A5%E6%94%B9%E6%93%8D%E4%BD%9C/" data-id="ck4sfpphg0000fov10twce70k" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/12/30/4.ElasticSearch%E5%B8%B8%E7%94%A8%E7%9A%84%E5%A2%9E%E5%88%A0%E6%9F%A5%E6%94%B9%E6%93%8D%E4%BD%9C/" data-id="ck52gfk4g000368v13hjw6fxg" class="article-share-link">Share</a>
       
       
     </footer>
@@ -129,9 +197,9 @@
 
 
   
-    <article id="post-Windows系统向ElasticSearch bulk批量同步数据" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-3.Windows系统向ElasticSearch bulk批量同步数据" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2019/12/30/Windows%E7%B3%BB%E7%BB%9F%E5%90%91ElasticSearch%20bulk%E6%89%B9%E9%87%8F%E5%90%8C%E6%AD%A5%E6%95%B0%E6%8D%AE/" class="article-date">
+    <a href="/2019/12/30/3.Windows%E7%B3%BB%E7%BB%9F%E5%90%91ElasticSearch%20bulk%E6%89%B9%E9%87%8F%E5%90%8C%E6%AD%A5%E6%95%B0%E6%8D%AE/" class="article-date">
   <time datetime="2019-12-30T12:28:10.067Z" itemprop="datePublished">2019-12-30</time>
 </a>
     
@@ -143,7 +211,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2019/12/30/Windows%E7%B3%BB%E7%BB%9F%E5%90%91ElasticSearch%20bulk%E6%89%B9%E9%87%8F%E5%90%8C%E6%AD%A5%E6%95%B0%E6%8D%AE/">Windows系统向ElasticSearch bulk批量同步数据</a>
+      <a class="article-title" href="/2019/12/30/3.Windows%E7%B3%BB%E7%BB%9F%E5%90%91ElasticSearch%20bulk%E6%89%B9%E9%87%8F%E5%90%8C%E6%AD%A5%E6%95%B0%E6%8D%AE/">3.Windows系统向ElasticSearch bulk批量同步数据</a>
     </h1>
   
 
@@ -174,7 +242,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/12/30/Windows%E7%B3%BB%E7%BB%9F%E5%90%91ElasticSearch%20bulk%E6%89%B9%E9%87%8F%E5%90%8C%E6%AD%A5%E6%95%B0%E6%8D%AE/" data-id="ck4sfpphs0002fov168e421a8" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/12/30/3.Windows%E7%B3%BB%E7%BB%9F%E5%90%91ElasticSearch%20bulk%E6%89%B9%E9%87%8F%E5%90%8C%E6%AD%A5%E6%95%B0%E6%8D%AE/" data-id="ck52gfk42000268v1crswct68" class="article-share-link">Share</a>
       
       
     </footer>
@@ -184,9 +252,9 @@
 
 
   
-    <article id="post-Docker简介及环境搭建" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-1.Docker简介及环境搭建" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2019/12/18/Docker%E7%AE%80%E4%BB%8B%E5%8F%8A%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" class="article-date">
+    <a href="/2019/12/18/1.Docker%E7%AE%80%E4%BB%8B%E5%8F%8A%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" class="article-date">
   <time datetime="2019-12-18T14:49:05.675Z" itemprop="datePublished">2019-12-18</time>
 </a>
     
@@ -198,7 +266,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2019/12/18/Docker%E7%AE%80%E4%BB%8B%E5%8F%8A%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/">Docker简介及环境搭建</a>
+      <a class="article-title" href="/2019/12/18/1.Docker%E7%AE%80%E4%BB%8B%E5%8F%8A%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/">1.Docker简介及环境搭建</a>
     </h1>
   
 
@@ -265,7 +333,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/12/18/Docker%E7%AE%80%E4%BB%8B%E5%8F%8A%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" data-id="ck4sfpphq0001fov13rpo4h19" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/12/18/1.Docker%E7%AE%80%E4%BB%8B%E5%8F%8A%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" data-id="ck52gfk40000168v11vwm9znl" class="article-share-link">Share</a>
       
       
     </footer>
@@ -293,7 +361,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li></ul>
     </div>
   </div>
 
@@ -306,15 +374,19 @@
       <ul>
         
           <li>
-            <a href="/2019/12/30/ElasticSearch%E5%B8%B8%E7%94%A8%E7%9A%84%E5%A2%9E%E5%88%A0%E6%9F%A5%E6%94%B9%E6%93%8D%E4%BD%9C/">ElasticSearch常用的增删查改操作</a>
+            <a href="/2020/01/06/2.Docker%20%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C/">2.Docker 常用操作</a>
           </li>
         
           <li>
-            <a href="/2019/12/30/Windows%E7%B3%BB%E7%BB%9F%E5%90%91ElasticSearch%20bulk%E6%89%B9%E9%87%8F%E5%90%8C%E6%AD%A5%E6%95%B0%E6%8D%AE/">Windows系统向ElasticSearch bulk批量同步数据</a>
+            <a href="/2019/12/30/4.ElasticSearch%E5%B8%B8%E7%94%A8%E7%9A%84%E5%A2%9E%E5%88%A0%E6%9F%A5%E6%94%B9%E6%93%8D%E4%BD%9C/">4.ElasticSearch常用的增删查改操作</a>
           </li>
         
           <li>
-            <a href="/2019/12/18/Docker%E7%AE%80%E4%BB%8B%E5%8F%8A%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/">Docker简介及环境搭建</a>
+            <a href="/2019/12/30/3.Windows%E7%B3%BB%E7%BB%9F%E5%90%91ElasticSearch%20bulk%E6%89%B9%E9%87%8F%E5%90%8C%E6%AD%A5%E6%95%B0%E6%8D%AE/">3.Windows系统向ElasticSearch bulk批量同步数据</a>
+          </li>
+        
+          <li>
+            <a href="/2019/12/18/1.Docker%E7%AE%80%E4%BB%8B%E5%8F%8A%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/">1.Docker简介及环境搭建</a>
           </li>
         
       </ul>
@@ -329,7 +401,7 @@
   
   <div class="outer">
     <div id="footer-info" class="inner">
-      &copy; 2019 Damon Liu<br>
+      &copy; 2020 Damon Liu<br>
       Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
     </div>
   </div>
