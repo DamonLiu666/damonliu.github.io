@@ -63,6 +63,259 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-微服务概述" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/02/06/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A6%82%E8%BF%B0/" class="article-date">
+  <time datetime="2020-02-06T14:14:50.562Z" itemprop="datePublished">2020-02-06</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/02/06/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A6%82%E8%BF%B0/">微服务概述</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="微服务概述"><a href="#微服务概述" class="headerlink" title="微服务概述"></a>微服务概述</h1><h2 id="1-什么是微服务架构"><a href="#1-什么是微服务架构" class="headerlink" title="1.什么是微服务架构"></a>1.什么是微服务架构</h2><ul>
+<li>微服务架构是一种架构模式或者说是一种架构风格</li>
+<li>将单一应用程序按业务划分成一组小的服务，每个服务运行在其独立的进程中。服务之间互相调用、配合，为用户提供最终价值</li>
+<li>服务之间采用轻量级的通信机制进行沟通(通常是基于HTTP的RESTful API)</li>
+<li>每个服务独立部署、发布</li>
+</ul>
+<h2 id="2-什么是微服务"><a href="#2-什么是微服务" class="headerlink" title="2.什么是微服务"></a>2.什么是微服务</h2><ul>
+<li><p>强调的是服务的大小，每个服务个体完成一个具体的任务或功能</p>
+<p>狭义的可以理解为是eclipse里的一个个工程</p>
+</li>
+</ul>
+<h2 id="3-微服务优缺点"><a href="#3-微服务优缺点" class="headerlink" title="3.微服务优缺点"></a>3.微服务优缺点</h2><ul>
+<li>优点<ul>
+<li>每个服务足够小，代码容易理解。每个服务能聚焦一个指定的业务功能或业务需求</li>
+<li>易于被小团队开发、修改和维护</li>
+<li>松耦合，是有功能意义的服务，无论是在开发阶段还是部署阶段都是独立的</li>
+<li>微服务能使用不同的语言开发</li>
+<li>易于和第三方集成，允许容易且灵活的方式集成自动部署，通过持续集成工具，如Jenkins</li>
+<li>只是业务逻辑的代码，不会和HTML、CSS或其他页面组件混合</li>
+<li>每个微服务可以使用自己独立的数据库，也可以共用一个数据库</li>
+</ul>
+</li>
+<li>缺点<ul>
+<li>需要处理分布式系统的复杂性</li>
+<li>多服务运维难度增加</li>
+<li>系统部署依赖</li>
+<li>服务间有通信成本</li>
+<li>数据一致性</li>
+<li>系统集成测试麻烦</li>
+<li>性能监控复杂</li>
+</ul>
+</li>
+</ul>
+<h2 id="4-微服务技术栈"><a href="#4-微服务技术栈" class="headerlink" title="4.微服务技术栈"></a>4.微服务技术栈</h2><table>
+<thead>
+<tr>
+<th>微服务条目</th>
+<th>落地技术</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>服务开发</td>
+<td>SpringBoot、Spring、SpringMVC</td>
+<td></td>
+</tr>
+<tr>
+<td>服务配置与管理</td>
+<td>Netflix公司的Archaius、阿里的Diamond等</td>
+<td></td>
+</tr>
+<tr>
+<td>服务注册与发现</td>
+<td>Eureka、Consul、Zookeeper</td>
+<td></td>
+</tr>
+<tr>
+<td>服务调用</td>
+<td>Rest、RPC、gRPC</td>
+<td></td>
+</tr>
+<tr>
+<td>服务熔断器</td>
+<td>Hystrix、Envoy</td>
+<td></td>
+</tr>
+<tr>
+<td>负载均衡</td>
+<td>Ribbon、Nginx</td>
+<td></td>
+</tr>
+<tr>
+<td>服务接口调用(客户端调用服务的简化工具)</td>
+<td>Feign</td>
+<td></td>
+</tr>
+<tr>
+<td>消息队列</td>
+<td>Kafka、RabbitMQ、ActiveMQ</td>
+<td></td>
+</tr>
+<tr>
+<td>服务配置中心管理</td>
+<td>SpringCloudConfig、Chef</td>
+<td></td>
+</tr>
+<tr>
+<td>服务路由(API网关)</td>
+<td>Zuul</td>
+<td></td>
+</tr>
+<tr>
+<td>服务监控</td>
+<td>Zabbix、Nagios、Metrics、Spectator</td>
+<td></td>
+</tr>
+<tr>
+<td>全链路追踪</td>
+<td>Zipkin、Brave、Dapper</td>
+<td></td>
+</tr>
+<tr>
+<td>服务部署</td>
+<td>Docker、OpenStack、K8S</td>
+<td></td>
+</tr>
+<tr>
+<td>数据流操作开发包</td>
+<td>SpringCloud Stream(封装Redis、Rabbit、Kafka等发送接收消息)</td>
+<td></td>
+</tr>
+<tr>
+<td>事件消息总线</td>
+<td>SpringCloud Bus</td>
+<td></td>
+</tr>
+</tbody></table>
+<h2 id="5-各微服务框架对比"><a href="#5-各微服务框架对比" class="headerlink" title="5.各微服务框架对比"></a>5.各微服务框架对比</h2><table>
+<thead>
+<tr>
+<th>功能点/服务框架</th>
+<th>Spring Cloud</th>
+<th>Motan</th>
+<th>gRPC</th>
+<th>Thrift</th>
+<th>Dubbo</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>功能定位</td>
+<td>完整的微服务框架</td>
+<td>RPC框架，但整合了ZK或Consul，实现集群环境的基本服务注册和发现</td>
+<td>RPC框架</td>
+<td>RPC框架</td>
+<td>RPC框架</td>
+</tr>
+<tr>
+<td>支持Rest</td>
+<td>是，Ribbon支持多种可插拔的序列化选择</td>
+<td>否</td>
+<td>否</td>
+<td>否</td>
+<td>否</td>
+</tr>
+<tr>
+<td>支持RPC</td>
+<td>否</td>
+<td>是</td>
+<td>是</td>
+<td>是</td>
+<td>是</td>
+</tr>
+<tr>
+<td>支持多语言</td>
+<td>是</td>
+<td>否</td>
+<td>是</td>
+<td>是</td>
+<td>是</td>
+</tr>
+<tr>
+<td>服务注册/发现</td>
+<td>是(Eureka)   Eureka服务注册表，Karyon服务端框架支持服务自注册和健康检查</td>
+<td>是(Zookeeper/Consul)</td>
+<td>否</td>
+<td>否</td>
+<td>是</td>
+</tr>
+<tr>
+<td>负载均衡</td>
+<td>是(服务端Zuul+客户端Ribbon)</td>
+<td>是(客户端)</td>
+<td>否</td>
+<td>否</td>
+<td>是(客户端)</td>
+</tr>
+<tr>
+<td>配置服务</td>
+<td>Netflix Archaius  SpringCloud Config Server集中配置</td>
+<td>是(Zookeeper提供)</td>
+<td>否</td>
+<td>否</td>
+<td>否</td>
+</tr>
+<tr>
+<td>服务调用链监控</td>
+<td>是(Zuul)  Zuul提供边缘服务，API网关</td>
+<td>否</td>
+<td>否</td>
+<td>否</td>
+<td>否</td>
+</tr>
+<tr>
+<td>高可用/容错</td>
+<td>是(服务端Hystrix+客户端Ribbon)</td>
+<td>是(客户端)</td>
+<td>否</td>
+<td>否</td>
+<td>是(客户端)</td>
+</tr>
+<tr>
+<td>典型应用案例</td>
+<td>Netflix</td>
+<td>Sina</td>
+<td>Google</td>
+<td>Facebook</td>
+<td></td>
+</tr>
+<tr>
+<td>其他</td>
+<td>Spring Cloud Bus为我们的应用程序带来了更多的管理端点</td>
+<td>支持降级</td>
+<td>Netflix内部开发集成gRPC</td>
+<td>IDL定义</td>
+<td></td>
+</tr>
+</tbody></table>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/02/06/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A6%82%E8%BF%B0/" data-id="ck6attlq80003isv18y624ln2" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-Docker常用操作" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2020/01/06/Docker%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C/" class="article-date">
@@ -121,7 +374,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/01/06/Docker%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C/" data-id="ck52grk8400005ov17t027u96" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/01/06/Docker%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C/" data-id="ck6attlq70002isv1dd8yc5bk" class="article-share-link">Share</a>
       
       
     </footer>
@@ -187,7 +440,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/12/30/ElasticSearch%E5%B8%B8%E7%94%A8%E7%9A%84%E5%A2%9E%E5%88%A0%E6%9F%A5%E6%94%B9%E6%93%8D%E4%BD%9C/" data-id="ck52grk8h00035ov1c1060fyp" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/12/30/ElasticSearch%E5%B8%B8%E7%94%A8%E7%9A%84%E5%A2%9E%E5%88%A0%E6%9F%A5%E6%94%B9%E6%93%8D%E4%BD%9C/" data-id="ck6attlq50001isv1083y98x6" class="article-share-link">Share</a>
       
       
     </footer>
@@ -242,7 +495,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/12/30/Windows%E7%B3%BB%E7%BB%9F%E5%90%91ElasticSearch%20bulk%E6%89%B9%E9%87%8F%E5%90%8C%E6%AD%A5%E6%95%B0%E6%8D%AE/" data-id="ck52grk8e00015ov102vf6ykg" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/12/30/Windows%E7%B3%BB%E7%BB%9F%E5%90%91ElasticSearch%20bulk%E6%89%B9%E9%87%8F%E5%90%8C%E6%AD%A5%E6%95%B0%E6%8D%AE/" data-id="ck6attlqm0004isv15uy678o3" class="article-share-link">Share</a>
       
       
     </footer>
@@ -333,7 +586,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/12/18/Docker%E7%AE%80%E4%BB%8B%E5%8F%8A%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" data-id="ck52grk8g00025ov116fz1rlw" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/12/18/Docker%E7%AE%80%E4%BB%8B%E5%8F%8A%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" data-id="ck6attlpu0000isv148b8cprg" class="article-share-link">Share</a>
       
       
     </footer>
@@ -361,7 +614,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li></ul>
     </div>
   </div>
 
@@ -372,6 +625,10 @@
     <h3 class="widget-title">Recent Posts</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2020/02/06/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A6%82%E8%BF%B0/">微服务概述</a>
+          </li>
         
           <li>
             <a href="/2020/01/06/Docker%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C/">Docker常用操作</a>
