@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>SpringCloud Eureka | Learning Paradise</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="服务注册与发现 Eureka1.Eureka是什么Eurekdiaoya是Netflix的一个子模块。 是基于Rest的服务，用于定位服务，以实现云端中间层服务发现和故障转移。 有了服务发现与注册，只需要使用服务的标识符，就可以访问到服务，而不需要修改服务调用的配置文件了。 功能类似于dubbo的注册中心，比如Zookeeper。 2.Eureka基本架构采用C - S的设计架构。Eureka S">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SpringCloud Eureka">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;02&#x2F;10&#x2F;SpringCloud%20Eureka&#x2F;index.html">
+<meta property="og:site_name" content="Learning Paradise">
+<meta property="og:description" content="服务注册与发现 Eureka1.Eureka是什么Eurekdiaoya是Netflix的一个子模块。 是基于Rest的服务，用于定位服务，以实现云端中间层服务发现和故障转移。 有了服务发现与注册，只需要使用服务的标识符，就可以访问到服务，而不需要修改服务调用的配置文件了。 功能类似于dubbo的注册中心，比如Zookeeper。 2.Eureka基本架构采用C - S的设计架构。Eureka S">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;02&#x2F;10&#x2F;SpringCloud%20Eureka&#x2F;C:%5CUsers%5Cliujun%5CDesktop%5C%E5%BE%AE%E6%9C%8D%E5%8A%A1%5CEureka%E6%9E%B6%E6%9E%84.PNG">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;02&#x2F;10&#x2F;SpringCloud%20Eureka&#x2F;C:%5CUsers%5Cliujun%5CDesktop%5C%E5%BE%AE%E6%9C%8D%E5%8A%A1%5CEureka_yml.PNG">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;02&#x2F;10&#x2F;SpringCloud%20Eureka&#x2F;C:%5CUsers%5Cliujun%5CDesktop%5C%E5%BE%AE%E6%9C%8D%E5%8A%A1%5CEureka_client_yml.PNG">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;02&#x2F;10&#x2F;SpringCloud%20Eureka&#x2F;C:%5CUsers%5Cliujun%5CDesktop%5C%E5%BE%AE%E6%9C%8D%E5%8A%A1%5CEureka_client_yml01.PNG">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;02&#x2F;10&#x2F;SpringCloud%20Eureka&#x2F;C:%5CUsers%5Cliujun%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1581324558809.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;02&#x2F;10&#x2F;SpringCloud%20Eureka&#x2F;C:%5CUsers%5Cliujun%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1581325162322.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;02&#x2F;10&#x2F;SpringCloud%20Eureka&#x2F;C:%5CUsers%5Cliujun%5CDesktop%5C%E5%BE%AE%E6%9C%8D%E5%8A%A1%5CEureka_client_yml02.PNG">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;02&#x2F;10&#x2F;SpringCloud%20Eureka&#x2F;C:%5CUsers%5Cliujun%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1581327793296.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;02&#x2F;10&#x2F;SpringCloud%20Eureka&#x2F;C:%5CUsers%5Cliujun%5CDesktop%5C%E5%BE%AE%E6%9C%8D%E5%8A%A1%5CEureka_discovery.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;02&#x2F;10&#x2F;SpringCloud%20Eureka&#x2F;C:%5CUsers%5Cliujun%5CDesktop%5C%E5%BE%AE%E6%9C%8D%E5%8A%A1%5CEureka_discovery_consumer.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;02&#x2F;10&#x2F;SpringCloud%20Eureka&#x2F;C:%5CUsers%5Cliujun%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1581331304637.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;02&#x2F;10&#x2F;SpringCloud%20Eureka&#x2F;C:%5CUsers%5Cliujun%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1581331551233.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;02&#x2F;10&#x2F;SpringCloud%20Eureka&#x2F;C:%5CUsers%5Cliujun%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1581331934733.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;02&#x2F;10&#x2F;SpringCloud%20Eureka&#x2F;C:%5CUsers%5Cliujun%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1581332583650.png">
+<meta property="article:published_time" content="2020-02-10T11:28:24.734Z">
+<meta property="article:modified_time" content="2020-02-10T11:26:03.663Z">
+<meta property="article:author" content="Damon Liu">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;02&#x2F;10&#x2F;SpringCloud%20Eureka&#x2F;C:%5CUsers%5Cliujun%5CDesktop%5C%E5%BE%AE%E6%9C%8D%E5%8A%A1%5CEureka%E6%9E%B6%E6%9E%84.PNG">
+  
+    <link rel="alternate" href="/atom.xml" title="Learning Paradise" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 4.1.1"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Learning Paradise</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-SpringCloud Eureka" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/02/10/SpringCloud%20Eureka/" class="article-date">
+  <time datetime="2020-02-10T11:28:24.734Z" itemprop="datePublished">2020-02-10</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      SpringCloud Eureka
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="服务注册与发现-Eureka"><a href="#服务注册与发现-Eureka" class="headerlink" title="服务注册与发现 Eureka"></a>服务注册与发现 Eureka</h1><h2 id="1-Eureka是什么"><a href="#1-Eureka是什么" class="headerlink" title="1.Eureka是什么"></a>1.Eureka是什么</h2><p>Eurekdiaoya是Netflix的一个子模块。</p>
+<p>是基于Rest的服务，用于定位服务，以实现云端中间层服务发现和故障转移。</p>
+<p>有了服务发现与注册，只需要使用服务的标识符，就可以访问到服务，而不需要修改服务调用的配置文件了。</p>
+<p>功能类似于dubbo的注册中心，比如Zookeeper。</p>
+<h2 id="2-Eureka基本架构"><a href="#2-Eureka基本架构" class="headerlink" title="2.Eureka基本架构"></a>2.Eureka基本架构</h2><p>采用C - S的设计架构。Eureka Server作为服务注册功能的服务器，是服务注册中心。</p>
+<p>系统中的其他微服务，使用Eureka Client端连接到Eureka Server并维持心跳连接。</p>
+<p>系统维护人员可以通过Eureka Server来监控各个微服务是否正常运行。</p>
+<p>Spring Cloud的其他模块(比如Zuul)就可以通过Eureka Server来发现系统中其他微服务，并执行相关的逻辑。</p>
+<p>Eureka Client是一个Java客户端，用于简化Eureka Server的交互，同时也具备一个内置的、使用轮询(dound-robin)堵在算法的负载均衡器。在容器移动后，将会像Eureka Server发送心跳(默认周期30s)。如果Eureka Server在多个心跳周期内没有收到某个节点的心跳。Eureka Server将会从服务注册表中把这个服务节点移除(默认90s)</p>
+<p><img src="/2020/02/10/SpringCloud%20Eureka/C:%5CUsers%5Cliujun%5CDesktop%5C%E5%BE%AE%E6%9C%8D%E5%8A%A1%5CEureka%E6%9E%B6%E6%9E%84.PNG" alt="Eureka架构"></p>
+<h2 id="3-Eureka三大角色"><a href="#3-Eureka三大角色" class="headerlink" title="3.Eureka三大角色"></a>3.Eureka三大角色</h2><ul>
+<li>Eureka Server提供服务注册和发现</li>
+<li>Service Provider将自身服务注册到Eureka，从而使服务消费放能够找到</li>
+<li>Service Consumer从Eureka获取注册服务列表，从而消费服务</li>
+</ul>
+<h2 id="4-构建步骤"><a href="#4-构建步骤" class="headerlink" title="4.构建步骤"></a>4.构建步骤</h2><ul>
+<li><p>在父工程目录上new一个Maven Module，Packaging选择jar。做为Eureka Server。</p>
+<ul>
+<li><p>pom文件引入spring-cloud-starter-euraka-server依赖</p>
+</li>
+<li><p>src/mian/resource路径下配置application.yml</p>
+<p><img src="/2020/02/10/SpringCloud%20Eureka/C:%5CUsers%5Cliujun%5CDesktop%5C%E5%BE%AE%E6%9C%8D%E5%8A%A1%5CEureka_yml.PNG" alt="Eureka_yml"></p>
+</li>
+<li><p>Eureka Server主启动类  </p>
+<p>@SpringBootApplication</p>
+<p>@EnableEurekaServer(EurekaServer启动类，接受其他微服务注册进来)</p>
+</li>
+</ul>
+</li>
+<li><p>将Service Provider注册到Eureka Server。</p>
+<ul>
+<li><p>在Service Provider pom文件引入依赖:</p>
+<p>spring-cloud-starter-eureka</p>
+<p>spring-cloud-starter-config</p>
+</li>
+<li><p>修改Service Provider application.yml</p>
+<p><img src="/2020/02/10/SpringCloud%20Eureka/C:%5CUsers%5Cliujun%5CDesktop%5C%E5%BE%AE%E6%9C%8D%E5%8A%A1%5CEureka_client_yml.PNG" alt="Eureka_client_yml"></p>
+</li>
+<li><p>修改Service Provider主启动类</p>
+<p>@EnableEurekaClient(服务启动后会自动注册到Eureka)</p>
+</li>
+</ul>
+</li>
+<li><p>actuator与注册微服务信息完善</p>
+<ul>
+<li><p>主机名称：服务名称修改</p>
+<p>修改Service Peovider application.yml</p>
+<p><img src="/2020/02/10/SpringCloud%20Eureka/C:%5CUsers%5Cliujun%5CDesktop%5C%E5%BE%AE%E6%9C%8D%E5%8A%A1%5CEureka_client_yml01.PNG" alt="Eureka_client_yml01"></p>
+</li>
+<li><p>访问信息有IP信息提示</p>
+<p>修改Service Peovider application.yml</p>
+<p><img src="/2020/02/10/SpringCloud%20Eureka/C:%5CUsers%5Cliujun%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1581324558809.png" alt="1581324558809"></p>
+</li>
+<li><p>微服务info内容详细信息</p>
+<p>在Service Provider pom文件新增spring-boot-starter-actuator依赖</p>
+<p>在父工程pom文件新增构建信息</p>
+<p><img src="/2020/02/10/SpringCloud%20Eureka/C:%5CUsers%5Cliujun%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1581325162322.png" alt="1581325162322"></p>
+<p>修改Service Peovider application.yml</p>
+<p><img src="/2020/02/10/SpringCloud%20Eureka/C:%5CUsers%5Cliujun%5CDesktop%5C%E5%BE%AE%E6%9C%8D%E5%8A%A1%5CEureka_client_yml02.PNG" alt="Eureka_client_yml02"></p>
+</li>
+</ul>
+</li>
+<li><p>Eureka自我保护机制</p>
+<p><img src="/2020/02/10/SpringCloud%20Eureka/C:%5CUsers%5Cliujun%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1581327793296.png" alt="1581327793296"></p>
+<p>某时刻某一个微服务不可用了，eureka不会立即清理，依旧会对该微服务的信息进行保存。(防止由于网络原因引起的连接问题，体现出了Eureka的高可用和可容错)</p>
+<p>在Eureka Server的yml文件中配置eureka.server.enable-self-preservation: false可以禁用自我保护机制，但不建议此操作。</p>
+</li>
+<li><p>服务发现</p>
+<p>对于注册到Eureka的微服务，可以通过服务大仙来回的该服务的信息</p>
+<ul>
+<li><p>在Service Provider 的controller新增DiscoveryClient API</p>
+<p><img src="/2020/02/10/SpringCloud%20Eureka/C:%5CUsers%5Cliujun%5CDesktop%5C%E5%BE%AE%E6%9C%8D%E5%8A%A1%5CEureka_discovery.png" alt="Eureka_discovery"></p>
+</li>
+<li><p>在Service Provider 的主启动类新增注解@EnableDiscoveryClient(服务发现)</p>
+</li>
+<li><p>在Service Consumer 的Controller新增discovery API<img src="/2020/02/10/SpringCloud%20Eureka/C:%5CUsers%5Cliujun%5CDesktop%5C%E5%BE%AE%E6%9C%8D%E5%8A%A1%5CEureka_discovery_consumer.png" alt="Eureka_discovery_consumer"></p>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="5-Eureka集群配置"><a href="#5-Eureka集群配置" class="headerlink" title="5.Eureka集群配置"></a>5.Eureka集群配置</h2><ul>
+<li><p>在父工程目录上new两个Maven Module，Packaging选择jar</p>
+</li>
+<li><p>pom文件引入相同的依赖</p>
+</li>
+<li><p>建立主启动类</p>
+</li>
+<li><p>修改映射配置文件</p>
+<p>windows下找到C:\Windows\System32\drivers\etc下的host文件添加如下内容：</p>
+<p><img src="/2020/02/10/SpringCloud%20Eureka/C:%5CUsers%5Cliujun%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1581331304637.png" alt="1581331304637"></p>
+</li>
+<li><p>三个Eureka Server配置yml，修改hostname和defaultZone</p>
+<p><img src="/2020/02/10/SpringCloud%20Eureka/C:%5CUsers%5Cliujun%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1581331551233.png" alt="1581331551233"></p>
+</li>
+<li><p>修改Service Provider 的yml，将三台Eureka Server的地址添加到defaultZone</p>
+</li>
+<li><p>测试</p>
+<p><img src="/2020/02/10/SpringCloud%20Eureka/C:%5CUsers%5Cliujun%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1581331934733.png" alt="1581331934733"></p>
+</li>
+</ul>
+<h2 id="6-作为服务注册中心，Eureka对比Zookeeper的优势"><a href="#6-作为服务注册中心，Eureka对比Zookeeper的优势" class="headerlink" title="6.作为服务注册中心，Eureka对比Zookeeper的优势"></a>6.作为服务注册中心，Eureka对比Zookeeper的优势</h2><ul>
+<li><p>Zookeeper遵守CP</p>
+<p>当zk的master节点一位内网络故障和其他节点失去联系时，剩余节点会重新进行leader选举，但这个时间比较长(30s~120s)，在此期间zk集群是不可用的，注册服务会瘫痪。</p>
+</li>
+</ul>
+<ul>
+<li><p>Eureka 遵守AP</p>
+<p>只要有一台Eureka还在，就能保证服务可用(高可用性)，只不过查到的信息可能不是最新的(不保证强一致性)。</p>
+<p>Eureka还有自我保护机制，如果在15min内85%的节点没有正常心跳，那么Eureka会认为和不断与注册中心出现网络故障，会出现以下几种情况：</p>
+<p>1.Eureka不再从注册列表中移除因为长时间没收到心跳而应该过期的服务</p>
+<p>2.Eureka依然能够接受新服务的注册和查询请求，但不会被同步到其他节点上(保证当前节点依然可用)</p>
+<p>3.当网络稳定后，当前实例心的注册信息会被同步到其他节点中</p>
+</li>
+</ul>
+<p>补充：</p>
+<p>RDBMS(MySQL/Oracle/sqlServer)  —-&gt; ACID(原子性、一致性、隔离性、持久性)</p>
+<p>NOSQL(redis/mongdb) —-&gt; CAP(强一致性、高可用性、分区容错性)</p>
+<p><img src="/2020/02/10/SpringCloud%20Eureka/C:%5CUsers%5Cliujun%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1581332583650.png" alt="1581332583650"></p>
+<p>在分布式系统中，肯定存在由于网络或硬件导致的延迟丢包问题，所以，分区容错性(P)必须实现。故只能在A和C中二选一</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/02/10/SpringCloud%20Eureka/" data-id="ck6ge63yo0000ecv17duk9rmu" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2020/02/10/SpringCloud%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%B7%A5%E7%A8%8B%E6%9E%84%E5%BB%BA/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">SpringCloud微服务工程构建</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/02/10/SpringCloud%20Eureka/">SpringCloud Eureka</a>
+          </li>
+        
+          <li>
+            <a href="/2020/02/10/SpringCloud%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%B7%A5%E7%A8%8B%E6%9E%84%E5%BB%BA/">SpringCloud微服务工程构建</a>
+          </li>
+        
+          <li>
+            <a href="/2020/02/10/SpringCloud%E6%A6%82%E8%BF%B0/">SpringCloud概述</a>
+          </li>
+        
+          <li>
+            <a href="/2020/02/06/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A6%82%E8%BF%B0/">微服务概述</a>
+          </li>
+        
+          <li>
+            <a href="/2020/01/06/Docker%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C/">Docker常用操作</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 Damon Liu<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>
