@@ -7,12 +7,12 @@
   
   <title>SpringCloud Eureka | Learning Paradise</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="服务注册与发现 Eureka1.Eureka是什么Eurekdiaoya是Netflix的一个子模块。 是基于Rest的服务，用于定位服务，以实现云端中间层服务发现和故障转移。 有了服务发现与注册，只需要使用服务的标识符，就可以访问到服务，而不需要修改服务调用的配置文件了。 功能类似于dubbo的注册中心，比如Zookeeper。 2.Eureka基本架构采用C - S的设计架构。Eureka S">
+  <meta name="description" content="服务注册与发现 Eureka1.Eureka是什么Eureka是Netflix的一个子模块。 是基于Rest的服务，用于定位服务，以实现云端中间层服务发现和故障转移。 有了服务发现与注册，只需要使用服务的标识符，就可以访问到服务，而不需要修改服务调用的配置文件了。 功能类似于dubbo的注册中心，比如Zookeeper。 2.Eureka基本架构采用C - S的设计架构。Eureka Server">
 <meta property="og:type" content="article">
 <meta property="og:title" content="SpringCloud Eureka">
 <meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;02&#x2F;10&#x2F;SpringCloud%20Eureka&#x2F;index.html">
 <meta property="og:site_name" content="Learning Paradise">
-<meta property="og:description" content="服务注册与发现 Eureka1.Eureka是什么Eurekdiaoya是Netflix的一个子模块。 是基于Rest的服务，用于定位服务，以实现云端中间层服务发现和故障转移。 有了服务发现与注册，只需要使用服务的标识符，就可以访问到服务，而不需要修改服务调用的配置文件了。 功能类似于dubbo的注册中心，比如Zookeeper。 2.Eureka基本架构采用C - S的设计架构。Eureka S">
+<meta property="og:description" content="服务注册与发现 Eureka1.Eureka是什么Eureka是Netflix的一个子模块。 是基于Rest的服务，用于定位服务，以实现云端中间层服务发现和故障转移。 有了服务发现与注册，只需要使用服务的标识符，就可以访问到服务，而不需要修改服务调用的配置文件了。 功能类似于dubbo的注册中心，比如Zookeeper。 2.Eureka基本架构采用C - S的设计架构。Eureka Server">
 <meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;02&#x2F;10&#x2F;SpringCloud%20Eureka&#x2F;C:%5CUsers%5Cliujun%5CDesktop%5C%E5%BE%AE%E6%9C%8D%E5%8A%A1%5CEureka%E6%9E%B6%E6%9E%84.PNG">
 <meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;02&#x2F;10&#x2F;SpringCloud%20Eureka&#x2F;C:%5CUsers%5Cliujun%5CDesktop%5C%E5%BE%AE%E6%9C%8D%E5%8A%A1%5CEureka_yml.PNG">
 <meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;02&#x2F;10&#x2F;SpringCloud%20Eureka&#x2F;C:%5CUsers%5Cliujun%5CDesktop%5C%E5%BE%AE%E6%9C%8D%E5%8A%A1%5CEureka_client_yml.PNG">
@@ -28,7 +28,7 @@
 <meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;02&#x2F;10&#x2F;SpringCloud%20Eureka&#x2F;C:%5CUsers%5Cliujun%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1581331934733.png">
 <meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;02&#x2F;10&#x2F;SpringCloud%20Eureka&#x2F;C:%5CUsers%5Cliujun%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1581332583650.png">
 <meta property="article:published_time" content="2020-02-10T11:28:24.734Z">
-<meta property="article:modified_time" content="2020-02-11T07:49:23.796Z">
+<meta property="article:modified_time" content="2020-02-11T10:21:33.231Z">
 <meta property="article:author" content="Damon Liu">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;02&#x2F;10&#x2F;SpringCloud%20Eureka&#x2F;C:%5CUsers%5Cliujun%5CDesktop%5C%E5%BE%AE%E6%9C%8D%E5%8A%A1%5CEureka%E6%9E%B6%E6%9E%84.PNG">
@@ -102,7 +102,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="服务注册与发现-Eureka"><a href="#服务注册与发现-Eureka" class="headerlink" title="服务注册与发现 Eureka"></a>服务注册与发现 Eureka</h1><h2 id="1-Eureka是什么"><a href="#1-Eureka是什么" class="headerlink" title="1.Eureka是什么"></a>1.Eureka是什么</h2><p>Eurekdiaoya是Netflix的一个子模块。</p>
+        <h1 id="服务注册与发现-Eureka"><a href="#服务注册与发现-Eureka" class="headerlink" title="服务注册与发现 Eureka"></a>服务注册与发现 Eureka</h1><h2 id="1-Eureka是什么"><a href="#1-Eureka是什么" class="headerlink" title="1.Eureka是什么"></a>1.Eureka是什么</h2><p>Eureka是Netflix的一个子模块。</p>
 <p>是基于Rest的服务，用于定位服务，以实现云端中间层服务发现和故障转移。</p>
 <p>有了服务发现与注册，只需要使用服务的标识符，就可以访问到服务，而不需要修改服务调用的配置文件了。</p>
 <p>功能类似于dubbo的注册中心，比如Zookeeper。</p>
@@ -225,7 +225,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/02/10/SpringCloud%20Eureka/" data-id="ck6hqi21l0001w0v1bq6aezev" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/02/10/SpringCloud%20Eureka/" data-id="ck6hqksy200047kv1048a0ou5" class="article-share-link">Share</a>
       
       
     </footer>
