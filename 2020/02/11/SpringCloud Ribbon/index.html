@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>SpringCloud Ribbon | Learning Paradise</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="SpringCloud Ribbon 负载均衡1.Ribbon是什么是基于Netflix Ribbon实现的一套客户端的负载均衡工具。 Ribbon客户端提供一系列完善的配置项如连接超时，重试等。简单地说，就是再配置文件中列出Load Balance(简称LB)后面所有的机器，Ribbon会自动基于某种规则(如简单轮询，随机连接等)去连接这些机器。我们也很容易使用Ribbon实现自定义的负载均衡算">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SpringCloud Ribbon">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;02&#x2F;11&#x2F;SpringCloud%20Ribbon&#x2F;index.html">
+<meta property="og:site_name" content="Learning Paradise">
+<meta property="og:description" content="SpringCloud Ribbon 负载均衡1.Ribbon是什么是基于Netflix Ribbon实现的一套客户端的负载均衡工具。 Ribbon客户端提供一系列完善的配置项如连接超时，重试等。简单地说，就是再配置文件中列出Load Balance(简称LB)后面所有的机器，Ribbon会自动基于某种规则(如简单轮询，随机连接等)去连接这些机器。我们也很容易使用Ribbon实现自定义的负载均衡算">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;02&#x2F;11&#x2F;SpringCloud%20Ribbon&#x2F;C:%5CUsers%5Cliujun%5CDesktop%5C%E5%BE%AE%E6%9C%8D%E5%8A%A1%5CRibbon01.PNG">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;02&#x2F;11&#x2F;SpringCloud%20Ribbon&#x2F;C:%5CUsers%5Cliujun%5CDesktop%5C%E5%BE%AE%E6%9C%8D%E5%8A%A1%5CRibbon02.PNG">
+<meta property="article:published_time" content="2020-02-11T10:16:01.744Z">
+<meta property="article:modified_time" content="2020-02-11T10:14:29.315Z">
+<meta property="article:author" content="Damon Liu">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;02&#x2F;11&#x2F;SpringCloud%20Ribbon&#x2F;C:%5CUsers%5Cliujun%5CDesktop%5C%E5%BE%AE%E6%9C%8D%E5%8A%A1%5CRibbon01.PNG">
+  
+    <link rel="alternate" href="/atom.xml" title="Learning Paradise" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 4.1.1"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Learning Paradise</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-SpringCloud Ribbon" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/02/11/SpringCloud%20Ribbon/" class="article-date">
+  <time datetime="2020-02-11T10:16:01.744Z" itemprop="datePublished">2020-02-11</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      SpringCloud Ribbon
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="SpringCloud-Ribbon-负载均衡"><a href="#SpringCloud-Ribbon-负载均衡" class="headerlink" title="SpringCloud Ribbon 负载均衡"></a>SpringCloud Ribbon 负载均衡</h1><h2 id="1-Ribbon是什么"><a href="#1-Ribbon是什么" class="headerlink" title="1.Ribbon是什么"></a>1.Ribbon是什么</h2><p>是基于Netflix Ribbon实现的一套客户端的负载均衡工具。</p>
+<p>Ribbon客户端提供一系列完善的配置项如连接超时，重试等。简单地说，就是再配置文件中列出Load Balance(简称LB)后面所有的机器，Ribbon会自动基于某种规则(如简单轮询，随机连接等)去连接这些机器。我们也很容易使用Ribbon实现自定义的负载均衡算法。</p>
+<p>LB，即负载均衡(Load Balance)，在为服务或分布式急群众常用的一种应用。</p>
+<p>负载均衡简单的说就是将用户的请求平摊的分配到多个服务上，从而达到系统的HA(高可用)。</p>
+<p>常见的负载均衡有软件Nginx，LVS，硬件F5等。</p>
+<p>在dubbo和SpringCloud中均提供了负载均衡，SpringCloud的负载均衡算法可以自定义。</p>
+<p>集中式LB：在服务的消费方和提供方之间使用独立的LB设施(可以是硬件，如F5，也可以是软件，如Nginx)，由该设施负责将访问请求通过某种策略转发到服务提供方。</p>
+<p>进程内LB：将LB逻辑集成到消费方，消费方从服务注册中心获知有哪些地址可用，然后自己再从这些地址中选择出一个合适的服务器。</p>
+<p>Ribbon就数据进程内LB，它是一个类库，继承与消费方进程，消费方通过它来获取到服务提供方的地址。</p>
+<h2 id="2-Ribbon初步配置"><a href="#2-Ribbon初步配置" class="headerlink" title="2.Ribbon初步配置"></a>2.Ribbon初步配置</h2><ul>
+<li><p>Service Consumer工程pom文件新增依赖</p>
+<p>spring-cloud-starter-eureka</p>
+<p>spring-cloud-starter-config</p>
+<p>spring-cloud-starter-ribbon</p>
+</li>
+<li><p>Service Consumer 修改application.yml</p>
+<p><img src="/2020/02/11/SpringCloud%20Ribbon/C:%5CUsers%5Cliujun%5CDesktop%5C%E5%BE%AE%E6%9C%8D%E5%8A%A1%5CRibbon01.PNG" alt="Ribbon01"></p>
+</li>
+<li><p>Service Consumer ConfigBean中获取RestTemplate新增@LoadBalanced注解</p>
+<p><img src="/2020/02/11/SpringCloud%20Ribbon/C:%5CUsers%5Cliujun%5CDesktop%5C%E5%BE%AE%E6%9C%8D%E5%8A%A1%5CRibbon02.PNG" alt="Ribbon02"></p>
+</li>
+<li><p>Service Consumer 主启动类新增@EnableEurekaClient注解</p>
+</li>
+<li><p>Service Consumer Controller中修改访问地址为微服务名称</p>
+</li>
+<li><p>先启动3个Eureka集群，再启动Provider注册进Eureka，最后启动Consumer</p>
+</li>
+</ul>
+<p>Ribbon和Eureka整合后，Consumer可以字节调用服务，而不用再关心地址和端口号</p>
+<h2 id="3-Ribbon负载均衡"><a href="#3-Ribbon负载均衡" class="headerlink" title="3.Ribbon负载均衡"></a>3.Ribbon负载均衡</h2><ul>
+<li><p>再新建两个Service Provider，配置对应的pom，application.yml</p>
+<p>这两个Provider可以连接其他的数据库</p>
+<p>三个Provider对外暴露的服务名要保持一致</p>
+</li>
+<li><p>先启动3个Eureka集群，再启动3个Provider，最后启动Consumer</p>
+</li>
+</ul>
+<h2 id="4-Ribbon核心组件IRule"><a href="#4-Ribbon核心组件IRule" class="headerlink" title="4.Ribbon核心组件IRule"></a>4.Ribbon核心组件IRule</h2><p>根据特定算法从服务列表中选取一个要访问的服务。</p>
+<p>在Serevice Consumer中新增方法，用@Bean注解。</p>
+<p>例如改为随机算法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Bean</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> IRule <span class="title">myRule</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> RandomRule();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li>RoundRobinRule轮询(默认)</li>
+<li>RandomRule 随机</li>
+<li>AvaliablityFilteringRule优先过滤掉由于多次访问故障而处于断路器跳闸状态的服务和并发出超级阈值的服务，然后对剩余的服务轮询</li>
+<li>WeightedResponseTimeRule根据平均响应时间计算所有服务的权重，响应时间越快，权重越大，被选中概率越高。刚启动时统计信息不足，会先使用轮询，等到统计信息足够再切换过来</li>
+<li>RetryRule先按照轮询，如果获取服务失败，会进行重试，在一定时间之后，只会获取其他可用的服务</li>
+<li>BestAvailableRule优先过滤掉由于多次访问故障而处于断路器跳闸状态的服务，然后选择一个并发量小的服务</li>
+<li>ZoneAvoidanceRule符合判断server所在区域的性能和server的可用性选择服务器</li>
+</ul>
+<h2 id="5-Ribbon自定义"><a href="#5-Ribbon自定义" class="headerlink" title="5.Ribbon自定义"></a>5.Ribbon自定义</h2><ul>
+<li><p>Service Consumer主启动类添加注解@RibbonClient</p>
+<p>再启动微服务的时候能自动加载我们自定义的Ribbon配置类</p>
+</li>
+<li><p>自定义配置类不能放在@ComponentScan所扫描的当前包及子包下(不能在主启动类所在的包下)，否则这个配置类会被所有Ribbon客户端共享，达不到定制化目的。</p>
+</li>
+<li><p>算法extends AbstrctLoadBalancerRule</p>
+</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/02/11/SpringCloud%20Ribbon/" data-id="ck6hqi21b0000w0v15qq207lr" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2020/02/10/SpringCloud%20Eureka/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">SpringCloud Eureka</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/02/11/SpringCloud%20Ribbon/">SpringCloud Ribbon</a>
+          </li>
+        
+          <li>
+            <a href="/2020/02/10/SpringCloud%20Eureka/">SpringCloud Eureka</a>
+          </li>
+        
+          <li>
+            <a href="/2020/02/10/SpringCloud%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%B7%A5%E7%A8%8B%E6%9E%84%E5%BB%BA/">SpringCloud微服务工程构建</a>
+          </li>
+        
+          <li>
+            <a href="/2020/02/10/SpringCloud%E6%A6%82%E8%BF%B0/">SpringCloud概述</a>
+          </li>
+        
+          <li>
+            <a href="/2020/02/06/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A6%82%E8%BF%B0/">微服务概述</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 Damon Liu<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>

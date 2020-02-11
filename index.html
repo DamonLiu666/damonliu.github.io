@@ -63,6 +63,104 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-SpringCloud Ribbon" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/02/11/SpringCloud%20Ribbon/" class="article-date">
+  <time datetime="2020-02-11T10:16:01.744Z" itemprop="datePublished">2020-02-11</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/02/11/SpringCloud%20Ribbon/">SpringCloud Ribbon</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="SpringCloud-Ribbon-负载均衡"><a href="#SpringCloud-Ribbon-负载均衡" class="headerlink" title="SpringCloud Ribbon 负载均衡"></a>SpringCloud Ribbon 负载均衡</h1><h2 id="1-Ribbon是什么"><a href="#1-Ribbon是什么" class="headerlink" title="1.Ribbon是什么"></a>1.Ribbon是什么</h2><p>是基于Netflix Ribbon实现的一套客户端的负载均衡工具。</p>
+<p>Ribbon客户端提供一系列完善的配置项如连接超时，重试等。简单地说，就是再配置文件中列出Load Balance(简称LB)后面所有的机器，Ribbon会自动基于某种规则(如简单轮询，随机连接等)去连接这些机器。我们也很容易使用Ribbon实现自定义的负载均衡算法。</p>
+<p>LB，即负载均衡(Load Balance)，在为服务或分布式急群众常用的一种应用。</p>
+<p>负载均衡简单的说就是将用户的请求平摊的分配到多个服务上，从而达到系统的HA(高可用)。</p>
+<p>常见的负载均衡有软件Nginx，LVS，硬件F5等。</p>
+<p>在dubbo和SpringCloud中均提供了负载均衡，SpringCloud的负载均衡算法可以自定义。</p>
+<p>集中式LB：在服务的消费方和提供方之间使用独立的LB设施(可以是硬件，如F5，也可以是软件，如Nginx)，由该设施负责将访问请求通过某种策略转发到服务提供方。</p>
+<p>进程内LB：将LB逻辑集成到消费方，消费方从服务注册中心获知有哪些地址可用，然后自己再从这些地址中选择出一个合适的服务器。</p>
+<p>Ribbon就数据进程内LB，它是一个类库，继承与消费方进程，消费方通过它来获取到服务提供方的地址。</p>
+<h2 id="2-Ribbon初步配置"><a href="#2-Ribbon初步配置" class="headerlink" title="2.Ribbon初步配置"></a>2.Ribbon初步配置</h2><ul>
+<li><p>Service Consumer工程pom文件新增依赖</p>
+<p>spring-cloud-starter-eureka</p>
+<p>spring-cloud-starter-config</p>
+<p>spring-cloud-starter-ribbon</p>
+</li>
+<li><p>Service Consumer 修改application.yml</p>
+<p><img src="/2020/02/11/SpringCloud%20Ribbon/C:%5CUsers%5Cliujun%5CDesktop%5C%E5%BE%AE%E6%9C%8D%E5%8A%A1%5CRibbon01.PNG" alt="Ribbon01"></p>
+</li>
+<li><p>Service Consumer ConfigBean中获取RestTemplate新增@LoadBalanced注解</p>
+<p><img src="/2020/02/11/SpringCloud%20Ribbon/C:%5CUsers%5Cliujun%5CDesktop%5C%E5%BE%AE%E6%9C%8D%E5%8A%A1%5CRibbon02.PNG" alt="Ribbon02"></p>
+</li>
+<li><p>Service Consumer 主启动类新增@EnableEurekaClient注解</p>
+</li>
+<li><p>Service Consumer Controller中修改访问地址为微服务名称</p>
+</li>
+<li><p>先启动3个Eureka集群，再启动Provider注册进Eureka，最后启动Consumer</p>
+</li>
+</ul>
+<p>Ribbon和Eureka整合后，Consumer可以字节调用服务，而不用再关心地址和端口号</p>
+<h2 id="3-Ribbon负载均衡"><a href="#3-Ribbon负载均衡" class="headerlink" title="3.Ribbon负载均衡"></a>3.Ribbon负载均衡</h2><ul>
+<li><p>再新建两个Service Provider，配置对应的pom，application.yml</p>
+<p>这两个Provider可以连接其他的数据库</p>
+<p>三个Provider对外暴露的服务名要保持一致</p>
+</li>
+<li><p>先启动3个Eureka集群，再启动3个Provider，最后启动Consumer</p>
+</li>
+</ul>
+<h2 id="4-Ribbon核心组件IRule"><a href="#4-Ribbon核心组件IRule" class="headerlink" title="4.Ribbon核心组件IRule"></a>4.Ribbon核心组件IRule</h2><p>根据特定算法从服务列表中选取一个要访问的服务。</p>
+<p>在Serevice Consumer中新增方法，用@Bean注解。</p>
+<p>例如改为随机算法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Bean</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> IRule <span class="title">myRule</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> RandomRule();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li>RoundRobinRule轮询(默认)</li>
+<li>RandomRule 随机</li>
+<li>AvaliablityFilteringRule优先过滤掉由于多次访问故障而处于断路器跳闸状态的服务和并发出超级阈值的服务，然后对剩余的服务轮询</li>
+<li>WeightedResponseTimeRule根据平均响应时间计算所有服务的权重，响应时间越快，权重越大，被选中概率越高。刚启动时统计信息不足，会先使用轮询，等到统计信息足够再切换过来</li>
+<li>RetryRule先按照轮询，如果获取服务失败，会进行重试，在一定时间之后，只会获取其他可用的服务</li>
+<li>BestAvailableRule优先过滤掉由于多次访问故障而处于断路器跳闸状态的服务，然后选择一个并发量小的服务</li>
+<li>ZoneAvoidanceRule符合判断server所在区域的性能和server的可用性选择服务器</li>
+</ul>
+<h2 id="5-Ribbon自定义"><a href="#5-Ribbon自定义" class="headerlink" title="5.Ribbon自定义"></a>5.Ribbon自定义</h2><ul>
+<li><p>Service Consumer主启动类添加注解@RibbonClient</p>
+<p>再启动微服务的时候能自动加载我们自定义的Ribbon配置类</p>
+</li>
+<li><p>自定义配置类不能放在@ComponentScan所扫描的当前包及子包下(不能在主启动类所在的包下)，否则这个配置类会被所有Ribbon客户端共享，达不到定制化目的。</p>
+</li>
+<li><p>算法extends AbstrctLoadBalancerRule</p>
+</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/02/11/SpringCloud%20Ribbon/" data-id="ck6hqi21b0000w0v15qq207lr" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-SpringCloud Eureka" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2020/02/10/SpringCloud%20Eureka/" class="article-date">
@@ -153,7 +251,7 @@
 <p>在Eureka Server的yml文件中配置eureka.server.enable-self-preservation: false可以禁用自我保护机制，但不建议此操作。</p>
 </li>
 <li><p>服务发现</p>
-<p>对于注册到Eureka的微服务，可以通过服务大仙来回的该服务的信息</p>
+<p>对于注册到Eureka的微服务，可以通过服务发现来获得该服务的信息</p>
 <ul>
 <li><p>在Service Provider 的controller新增DiscoveryClient API</p>
 <p><img src="/2020/02/10/SpringCloud%20Eureka/C:%5CUsers%5Cliujun%5CDesktop%5C%E5%BE%AE%E6%9C%8D%E5%8A%A1%5CEureka_discovery.png" alt="Eureka_discovery"></p>
@@ -208,7 +306,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/02/10/SpringCloud%20Eureka/" data-id="ck6ge63yo0000ecv17duk9rmu" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/02/10/SpringCloud%20Eureka/" data-id="ck6hqi21l0001w0v1bq6aezev" class="article-share-link">Share</a>
       
       
     </footer>
@@ -315,7 +413,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/02/10/SpringCloud%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%B7%A5%E7%A8%8B%E6%9E%84%E5%BB%BA/" data-id="ck6ge63z30001ecv13lo777ea" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/02/10/SpringCloud%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%B7%A5%E7%A8%8B%E6%9E%84%E5%BB%BA/" data-id="ck6hqi21p0004w0v1crr70wx8" class="article-share-link">Share</a>
       
       
     </footer>
@@ -415,7 +513,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/02/10/SpringCloud%E6%A6%82%E8%BF%B0/" data-id="ck6ge63z80002ecv11uda4ra4" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/02/10/SpringCloud%E6%A6%82%E8%BF%B0/" data-id="ck6hqi2310008w0v125bx55to" class="article-share-link">Share</a>
       
       
     </footer>
@@ -668,7 +766,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/02/06/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A6%82%E8%BF%B0/" data-id="ck6ge63zu0006ecv1d2000tmf" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/02/06/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A6%82%E8%BF%B0/" data-id="ck6hqi21q0005w0v1cyk8h1n8" class="article-share-link">Share</a>
       
       
     </footer>
@@ -736,7 +834,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/01/06/Docker%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C/" data-id="ck6ge63za0003ecv1foue9iec" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/01/06/Docker%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C/" data-id="ck6hqi22m0006w0v1cfpe1nyq" class="article-share-link">Share</a>
       
       
     </footer>
@@ -802,7 +900,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/12/30/ElasticSearch%E5%B8%B8%E7%94%A8%E7%9A%84%E5%A2%9E%E5%88%A0%E6%9F%A5%E6%94%B9%E6%93%8D%E4%BD%9C/" data-id="ck6ge63zv0007ecv1bli767ha" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/12/30/ElasticSearch%E5%B8%B8%E7%94%A8%E7%9A%84%E5%A2%9E%E5%88%A0%E6%9F%A5%E6%94%B9%E6%93%8D%E4%BD%9C/" data-id="ck6hqi21o0003w0v1bp100kbm" class="article-share-link">Share</a>
       
       
     </footer>
@@ -857,7 +955,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/12/30/Windows%E7%B3%BB%E7%BB%9F%E5%90%91ElasticSearch%20bulk%E6%89%B9%E9%87%8F%E5%90%8C%E6%AD%A5%E6%95%B0%E6%8D%AE/" data-id="ck6ge63zd0005ecv1d8td8wtq" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/12/30/Windows%E7%B3%BB%E7%BB%9F%E5%90%91ElasticSearch%20bulk%E6%89%B9%E9%87%8F%E5%90%8C%E6%AD%A5%E6%95%B0%E6%8D%AE/" data-id="ck6hqi22v0007w0v16x0ubeg0" class="article-share-link">Share</a>
       
       
     </footer>
@@ -948,7 +1046,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/12/18/Docker%E7%AE%80%E4%BB%8B%E5%8F%8A%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" data-id="ck6ge63zc0004ecv14r2hh19f" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/12/18/Docker%E7%AE%80%E4%BB%8B%E5%8F%8A%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" data-id="ck6hqi21m0002w0v1ff4xflgp" class="article-share-link">Share</a>
       
       
     </footer>
@@ -989,6 +1087,10 @@
       <ul>
         
           <li>
+            <a href="/2020/02/11/SpringCloud%20Ribbon/">SpringCloud Ribbon</a>
+          </li>
+        
+          <li>
             <a href="/2020/02/10/SpringCloud%20Eureka/">SpringCloud Eureka</a>
           </li>
         
@@ -1002,10 +1104,6 @@
         
           <li>
             <a href="/2020/02/06/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A6%82%E8%BF%B0/">微服务概述</a>
-          </li>
-        
-          <li>
-            <a href="/2020/01/06/Docker%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C/">Docker常用操作</a>
           </li>
         
       </ul>
