@@ -63,6 +63,168 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-SpringCloud Hystrix" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/02/13/SpringCloud%20Hystrix/" class="article-date">
+  <time datetime="2020-02-13T13:29:00.268Z" itemprop="datePublished">2020-02-13</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/02/13/SpringCloud%20Hystrix/">SpringCloud Hystrix</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="SpringCloud-Hystrix-断路器"><a href="#SpringCloud-Hystrix-断路器" class="headerlink" title="SpringCloud Hystrix 断路器"></a>SpringCloud Hystrix 断路器</h1><h2 id="1-Hystrix是什么"><a href="#1-Hystrix是什么" class="headerlink" title="1.Hystrix是什么"></a>1.Hystrix是什么</h2><ul>
+<li><p>服务雪崩</p>
+<p>多个微服务之间调用的时候，假设微服务A调用微服务B和微服务C，B和C又调用其他微服务，这就是所谓的“扇出”。如果扇出的链路上某个微服务调用响应时间过长或不可用，对A的调用就会占用越来越多的资源，进而引起系统崩溃，所谓”雪崩效应”。</p>
+</li>
+<li><p>Hystrix是一种用于处理分布式系统延迟和容错的开源库。在分布式系统里，许多依赖不可避免的会调用失败，比如超时、异常等。Hystrix能保证在一个依赖出问题的情况下，不会导致整体服务失败，避免级联故障，以提高分布式系统的弹性。</p>
+</li>
+<li><p>当某个服务单元发生故障之后，通过断路器的故障监控，像调用方返回一个符合预期的、可处理的备选响应(FallBack)，而不是长时间的等待或这抛出调用方无法处理的异常。</p>
+</li>
+</ul>
+<h2 id="2-服务熔断"><a href="#2-服务熔断" class="headerlink" title="2.服务熔断"></a>2.服务熔断</h2><p>当扇出链路的某个微服务不可用或者响应时间太长，会进行服务降级，进而熔断该节点微服务的调用，快速返回“错误”的响应信息。当该节点响应正常后回复调用链路。</p>
+<p>某个服务故障或异常引起的，当某个异常条件被触发，直接熔断整个服务，而不是一直等到此服务超时。</p>
+<p>Hystrix会监控微服务间的调用状况，当失败的调用到一定阈值(默认5秒内20次调用失败)，则会启动熔断机制。</p>
+<ul>
+<li>在Service Provider pom文件新增spring-cloud-starter-hystrix依赖</li>
+<li>在Service Provider Controller的方法上使用@HystrixCommand注解</li>
+<li>Service Provider主启动类新增注解@EnableCircuitBreaker</li>
+</ul>
+<h2 id="3-服务降级"><a href="#3-服务降级" class="headerlink" title="3.服务降级"></a>3.服务降级</h2><ul>
+<li><p>服务降级是什么？</p>
+<p>当某个服务熔断后，服务器将不再被调用，此时客户端自己准备一个fallback回调，返回一个缺省值</p>
+</li>
+<li><p>服务降级处理，是在客户端处理的，与服务端无关</p>
+</li>
+</ul>
+<p>为避免服务熔断方法膨胀，可使用如下服务降级处理</p>
+<ul>
+<li><p>在Service API公共模块新建一个实现了FallbackFactory接口的类</p>
+<ul>
+<li>一定要在这个类上使用@Component注解</li>
+<li>在create方法中处理熔断</li>
+</ul>
+</li>
+<li><p>在Service API公共模块原有的interface上修改@FeignClient注解</p>
+<p>@FeignClient(value = “XXX”,fallbackFactory = YYYFallbackFactory.class)</p>
+</li>
+<li><p>Service API公共模块maven clean</p>
+</li>
+<li><p>Service API公共模块maven install</p>
+</li>
+<li><p>Service Consumer yml新增feign.hystrix.enable: true</p>
+</li>
+</ul>
+<h2 id="4-Hystrix-Dashboard"><a href="#4-Hystrix-Dashboard" class="headerlink" title="4.Hystrix Dashboard"></a>4.Hystrix Dashboard</h2><ul>
+<li><p>在父工程目录上new一个Maven Module，Packaging选择jar。</p>
+</li>
+<li><p>pom文件引入依赖</p>
+<p>spring-cloud-starter-hystrix</p>
+<p>spring-cloud-starter-hystrix-dashboard</p>
+</li>
+<li><p>yml文件配置端口</p>
+</li>
+<li><p>主启动类@EnableHystrixDashboard注解 </p>
+</li>
+<li><p>Service Provider需要引入spring-boot-starter-actuator</p>
+</li>
+<li><p>web访问</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">web访问地址http://ip:port/hystrix</span><br><span class="line">需要监测的地址http://ip:port/hystrix.stream</span><br></pre></td></tr></table></figure>
+
+<p>Delay:控制服务器上轮询监控信息的延迟时间，默认2000毫秒，可以通过配置该属性来降低客户端的网络和CPU消耗</p>
+<p>Title:展示自己设定的标题</p>
+</li>
+<li><p>七色，一圈，一线</p>
+<p><img src="/2020/02/13/SpringCloud%20Hystrix/C:%5CUsers%5Cliujun%5CDesktop%5C%E5%BE%AE%E6%9C%8D%E5%8A%A1%5CHystrix01.png" alt="Hystrix01"></p>
+<p>七色：七种状态颜色一一对应</p>
+<p>一圈(实心圆)：</p>
+<ul>
+<li>颜色代表健康程度。绿色-&gt;黄色-&gt;橙色-&gt;红色，健康状态依次递减</li>
+<li>流量越大，实心圆越大</li>
+</ul>
+<p>一线:用来记录2min内流量的相对变化，可以观察流量的上升和下降趋势。</p>
+</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/02/13/SpringCloud%20Hystrix/" data-id="ck6ksirr5000584v1hfe50qae" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-SpringCloud Feign" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/02/13/SpringCloud%20Feign/" class="article-date">
+  <time datetime="2020-02-13T13:28:55.784Z" itemprop="datePublished">2020-02-13</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/02/13/SpringCloud%20Feign/">SpringCloud Feign</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="Feign负载均衡"><a href="#Feign负载均衡" class="headerlink" title="Feign负载均衡"></a>Feign负载均衡</h1><h2 id="1-Feign是什么"><a href="#1-Feign是什么" class="headerlink" title="1.Feign是什么"></a>1.Feign是什么</h2><p>是一个声明式的Web服务客户端，使编写Web服务客户端变得非常容易。</p>
+<p>只需要创建一个接口，然后在上面添加注解即可。</p>
+<p>在使用Ribbon+RestTemplate时，利用RestTemplate对http请求的封装处理，形成了一套模板化的调用方法。但实际开发中，一个接口可能会被多处调用，所以通常会针对每个微服务自行封装一些客户端类来包装这些依赖服务的调用。所以，Feign在此基础上做了封装，帮助我们定义和实现依赖服务接口的定义。简化使用Ribbon时，自动封装服务调用客户端的开发量。</p>
+<p>Feign集成了Ribbon，利用Ribbon维护了服务列表信息，并通过轮询实现了客户端的负载均衡，而与Ribbon不同的时，通过Feign只需要定义服务绑定接口且以声明式的方法，优雅而简单的实现了服务调用</p>
+<h2 id="2-Feign的构建步骤"><a href="#2-Feign的构建步骤" class="headerlink" title="2.Feign的构建步骤"></a>2.Feign的构建步骤</h2><ul>
+<li>在父工程目录上new一个Maven Module，Packaging选择jar，新建一个Consumer工程</li>
+<li>pom文件新增spring-cloud-starter-feign依赖</li>
+<li>修改Service API公共模块<ul>
+<li>pom文件新增spring-cloud-starter-feign依赖</li>
+<li>新建interface接口，用@FeignClient注解</li>
+<li>maven clean</li>
+<li>maven install</li>
+</ul>
+</li>
+<li>Feign Consumer的Controller不再使用RestTemplate，改为引入API公共模块的interface</li>
+<li>在Feign Consumer的主启动类新增注解@EnableFeignClients，@ComponentScan</li>
+<li>先启动3个Eureka服务，再启动3个Provider服务，最后启动Service Feign</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/02/13/SpringCloud%20Feign/" data-id="ck6ksirr3000484v19c6y2ups" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-SpringCloud Ribbon" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2020/02/11/SpringCloud%20Ribbon/" class="article-date">
@@ -151,7 +313,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/02/11/SpringCloud%20Ribbon/" data-id="ck6hqksy000037kv1f4mzhvfe" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/02/11/SpringCloud%20Ribbon/" data-id="ck6ksirr6000684v16okc25p8" class="article-share-link">Share</a>
       
       
     </footer>
@@ -306,7 +468,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/02/10/SpringCloud%20Eureka/" data-id="ck6hqksy200047kv1048a0ou5" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/02/10/SpringCloud%20Eureka/" data-id="ck6ksirr2000384v1biimhl37" class="article-share-link">Share</a>
       
       
     </footer>
@@ -413,7 +575,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/02/10/SpringCloud%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%B7%A5%E7%A8%8B%E6%9E%84%E5%BB%BA/" data-id="ck6hqksy300057kv1bgyjbhbo" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/02/10/SpringCloud%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%B7%A5%E7%A8%8B%E6%9E%84%E5%BB%BA/" data-id="ck6ksirr7000784v1c3s2eo4y" class="article-share-link">Share</a>
       
       
     </footer>
@@ -513,7 +675,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/02/10/SpringCloud%E6%A6%82%E8%BF%B0/" data-id="ck6hqksy700067kv12vr9dwg4" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/02/10/SpringCloud%E6%A6%82%E8%BF%B0/" data-id="ck6ksirr8000884v18jjqgwh8" class="article-share-link">Share</a>
       
       
     </footer>
@@ -766,7 +928,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/02/06/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A6%82%E8%BF%B0/" data-id="ck6hqksy900087kv14u17elvw" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/02/06/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A6%82%E8%BF%B0/" data-id="ck6ksirra000a84v1dli8guns" class="article-share-link">Share</a>
       
       
     </footer>
@@ -834,7 +996,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/01/06/Docker%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C/" data-id="ck6hqksxl00007kv1fimefdch" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/01/06/Docker%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C/" data-id="ck6ksirqo000084v19y0r3802" class="article-share-link">Share</a>
       
       
     </footer>
@@ -900,7 +1062,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/12/30/ElasticSearch%E5%B8%B8%E7%94%A8%E7%9A%84%E5%A2%9E%E5%88%A0%E6%9F%A5%E6%94%B9%E6%93%8D%E4%BD%9C/" data-id="ck6hqksxz00027kv1d76icgoq" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/12/30/ElasticSearch%E5%B8%B8%E7%94%A8%E7%9A%84%E5%A2%9E%E5%88%A0%E6%9F%A5%E6%94%B9%E6%93%8D%E4%BD%9C/" data-id="ck6ksirr0000284v18krrfc1h" class="article-share-link">Share</a>
       
       
     </footer>
@@ -955,98 +1117,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/12/30/Windows%E7%B3%BB%E7%BB%9F%E5%90%91ElasticSearch%20bulk%E6%89%B9%E9%87%8F%E5%90%8C%E6%AD%A5%E6%95%B0%E6%8D%AE/" data-id="ck6hqksy800077kv14tw54flh" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-Docker简介及环境搭建" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/12/18/Docker%E7%AE%80%E4%BB%8B%E5%8F%8A%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" class="article-date">
-  <time datetime="2019-12-18T14:49:05.675Z" itemprop="datePublished">2019-12-18</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/12/18/Docker%E7%AE%80%E4%BB%8B%E5%8F%8A%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/">Docker简介及环境搭建</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="Docker-简介及环境搭建"><a href="#Docker-简介及环境搭建" class="headerlink" title="Docker 简介及环境搭建"></a>Docker 简介及环境搭建</h1><h2 id="1-Docker是什么"><a href="#1-Docker是什么" class="headerlink" title="1.Docker是什么"></a>1.Docker是什么</h2><p>Docker 是一个开源的应用容器引擎，让开发者可以打包他们的应用以及依赖包到一个可移植的镜像中，然后发布到任何流行的 Linux或Windows 机器上，也可以实现虚拟化。容器是完全使用沙箱机制，相互之间不会有任何接口。</p>
-<h2 id="2-Docker相关概念"><a href="#2-Docker相关概念" class="headerlink" title="2.Docker相关概念"></a>2.Docker相关概念</h2><ul>
-<li>Doker Host 主机<ul>
-<li>安装了Docker程序的机器，Docker直接安装在操作系统之上</li>
-</ul>
-</li>
-<li>Dcoker Client 客户端<ul>
-<li>通过命令行或其他工具使用Docker</li>
-</ul>
-</li>
-<li>Docker Images 镜像<ul>
-<li>软件打包好的镜像，用于创建Docker容器的模板</li>
-</ul>
-</li>
-<li>Dcoker Container 容器<ul>
-<li>镜像启动后的实例称为一个容器，容器是独立运行的一个或一组应用</li>
-</ul>
-</li>
-<li>Docker Registry 仓库<ul>
-<li>保存各种打包好的Docker镜像</li>
-</ul>
-</li>
-</ul>
-<h2 id="3-使用Docker的步骤"><a href="#3-使用Docker的步骤" class="headerlink" title="3.使用Docker的步骤"></a>3.使用Docker的步骤</h2><ul>
-<li>安装Docker</li>
-<li>去Docker仓库找到软件对应镜像</li>
-<li>使用Docker运行镜像，生成Docker容器</li>
-<li>对容器的启停就是对软件的启停</li>
-</ul>
-<h2 id="4-安装Docker"><a href="#4-安装Docker" class="headerlink" title="4.安装Docker"></a>4.安装Docker</h2><h3 id="1-安装Linux虚拟机"><a href="#1-安装Linux虚拟机" class="headerlink" title="1).安装Linux虚拟机"></a>1).安装Linux虚拟机</h3><ul>
-<li><p>安装Virtual Box</p>
-</li>
-<li><p>导入CentOS7</p>
-</li>
-<li><p>启动虚拟机</p>
-</li>
-<li><p>设置虚拟机网络，如果是连接的WiFi，需要选择无线网卡</p>
-</li>
-<li><p>使用命令重启虚拟机网络  </p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">service network restart</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>查看LinuxIP地址</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ip addr</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>使用客户端工具连接虚拟机</p>
-</li>
-</ul>
-<h3 id="2-在Linux虚拟机安装Docker"><a href="#2-在Linux虚拟机安装Docker" class="headerlink" title="2). 在Linux虚拟机安装Docker"></a>2). 在Linux虚拟机安装Docker</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">1.检查内核版本，必须是3.10以上</span><br><span class="line">	uname -r</span><br><span class="line">2.安装Docker</span><br><span class="line">	yum install docker</span><br><span class="line">3.输入y确认安装</span><br><span class="line">4.启动Docker</span><br><span class="line">	systemctl start docker</span><br><span class="line">5.查看Docker版本</span><br><span class="line">	docker -v</span><br><span class="line">6.开机启动Docker</span><br><span class="line">	systemctl enable docker</span><br><span class="line">7.停止Docker</span><br><span class="line">	systemctl stop docker</span><br></pre></td></tr></table></figure>
-
-<h2 id="5-踩过的坑"><a href="#5-踩过的坑" class="headerlink" title="5.踩过的坑"></a>5.踩过的坑</h2><h3 id="1-安装docker不报错，但是启动的时候以下错误："><a href="#1-安装docker不报错，但是启动的时候以下错误：" class="headerlink" title="1).安装docker不报错，但是启动的时候以下错误："></a>1).安装docker不报错，但是启动的时候以下错误：</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Job for docker.service failed because the control process exited with error code. See "systemctl status docker.service" and "journalctl -xe" for details.</span><br></pre></td></tr></table></figure>
-
-<p>原因：可能还是因为内核版本问题</p>
-<p>解决方案：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">1.卸载之前安装的docker</span><br><span class="line">	yum remove docker-*</span><br><span class="line">2.更新Linux内核</span><br><span class="line">	yum update</span><br><span class="line">3.重新安装docker</span><br><span class="line">	yum install docker</span><br><span class="line">4.重启虚拟机</span><br><span class="line">5.启动docker</span><br><span class="line">	systemctl start docker</span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/12/18/Docker%E7%AE%80%E4%BB%8B%E5%8F%8A%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" data-id="ck6hqksxw00017kv1d7zmgjog" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/12/30/Windows%E7%B3%BB%E7%BB%9F%E5%90%91ElasticSearch%20bulk%E6%89%B9%E9%87%8F%E5%90%8C%E6%AD%A5%E6%95%B0%E6%8D%AE/" data-id="ck6ksirr9000984v1aexd9zam" class="article-share-link">Share</a>
       
       
     </footer>
@@ -1057,6 +1128,11 @@
 
   
 
+
+  <nav id="page-nav">
+    
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">Next &amp;raquo;</a>
+  </nav>
 
 </section>
         
@@ -1087,6 +1163,14 @@
       <ul>
         
           <li>
+            <a href="/2020/02/13/SpringCloud%20Hystrix/">SpringCloud Hystrix</a>
+          </li>
+        
+          <li>
+            <a href="/2020/02/13/SpringCloud%20Feign/">SpringCloud Feign</a>
+          </li>
+        
+          <li>
             <a href="/2020/02/11/SpringCloud%20Ribbon/">SpringCloud Ribbon</a>
           </li>
         
@@ -1096,14 +1180,6 @@
         
           <li>
             <a href="/2020/02/10/SpringCloud%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%B7%A5%E7%A8%8B%E6%9E%84%E5%BB%BA/">SpringCloud微服务工程构建</a>
-          </li>
-        
-          <li>
-            <a href="/2020/02/10/SpringCloud%E6%A6%82%E8%BF%B0/">SpringCloud概述</a>
-          </li>
-        
-          <li>
-            <a href="/2020/02/06/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A6%82%E8%BF%B0/">微服务概述</a>
           </li>
         
       </ul>

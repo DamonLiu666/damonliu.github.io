@@ -5,16 +5,16 @@
   
 
   
-  <title>SpringCloud概述 | Learning Paradise</title>
+  <title>SpringCloud Feign | Learning Paradise</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="SpringCloud 概述1.SpringCloud和SpringBoot的关系 SpringBoot关注于快速便捷的开发单个个体微服务 SpringCloud是关注于全局的微服务协调整理治理框架，将SpringBoot开发的一个个单体微服务整合并管理起来 springBoot可以离开SpringCloud独立开发项目，反之不可，是依赖关系  2.SpringClooud和Dubbo对比">
+  <meta name="description" content="Feign负载均衡1.Feign是什么是一个声明式的Web服务客户端，使编写Web服务客户端变得非常容易。 只需要创建一个接口，然后在上面添加注解即可。 在使用Ribbon+RestTemplate时，利用RestTemplate对http请求的封装处理，形成了一套模板化的调用方法。但实际开发中，一个接口可能会被多处调用，所以通常会针对每个微服务自行封装一些客户端类来包装这些依赖服务的调用。所以，">
 <meta property="og:type" content="article">
-<meta property="og:title" content="SpringCloud概述">
-<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;02&#x2F;10&#x2F;SpringCloud%E6%A6%82%E8%BF%B0&#x2F;index.html">
+<meta property="og:title" content="SpringCloud Feign">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;02&#x2F;13&#x2F;SpringCloud%20Feign&#x2F;index.html">
 <meta property="og:site_name" content="Learning Paradise">
-<meta property="og:description" content="SpringCloud 概述1.SpringCloud和SpringBoot的关系 SpringBoot关注于快速便捷的开发单个个体微服务 SpringCloud是关注于全局的微服务协调整理治理框架，将SpringBoot开发的一个个单体微服务整合并管理起来 springBoot可以离开SpringCloud独立开发项目，反之不可，是依赖关系  2.SpringClooud和Dubbo对比">
-<meta property="article:published_time" content="2020-02-10T11:28:17.104Z">
-<meta property="article:modified_time" content="2020-02-08T10:38:01.889Z">
+<meta property="og:description" content="Feign负载均衡1.Feign是什么是一个声明式的Web服务客户端，使编写Web服务客户端变得非常容易。 只需要创建一个接口，然后在上面添加注解即可。 在使用Ribbon+RestTemplate时，利用RestTemplate对http请求的封装处理，形成了一套模板化的调用方法。但实际开发中，一个接口可能会被多处调用，所以通常会针对每个微服务自行封装一些客户端类来包装这些依赖服务的调用。所以，">
+<meta property="article:published_time" content="2020-02-13T13:28:55.784Z">
+<meta property="article:modified_time" content="2020-02-12T07:00:49.845Z">
 <meta property="article:author" content="Damon Liu">
 <meta name="twitter:card" content="summary">
   
@@ -65,10 +65,10 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main"><article id="post-SpringCloud概述" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main"><article id="post-SpringCloud Feign" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2020/02/10/SpringCloud%E6%A6%82%E8%BF%B0/" class="article-date">
-  <time datetime="2020-02-10T11:28:17.104Z" itemprop="datePublished">2020-02-10</time>
+    <a href="/2020/02/13/SpringCloud%20Feign/" class="article-date">
+  <time datetime="2020-02-13T13:28:55.784Z" itemprop="datePublished">2020-02-13</time>
 </a>
     
   </div>
@@ -79,7 +79,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      SpringCloud概述
+      SpringCloud Feign
     </h1>
   
 
@@ -87,75 +87,29 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="SpringCloud-概述"><a href="#SpringCloud-概述" class="headerlink" title="SpringCloud 概述"></a>SpringCloud 概述</h1><h2 id="1-SpringCloud和SpringBoot的关系"><a href="#1-SpringCloud和SpringBoot的关系" class="headerlink" title="1.SpringCloud和SpringBoot的关系"></a>1.SpringCloud和SpringBoot的关系</h2><ul>
-<li>SpringBoot关注于快速便捷的开发单个个体微服务</li>
-<li>SpringCloud是关注于全局的微服务协调整理治理框架，将SpringBoot开发的一个个单体微服务整合并管理起来</li>
-<li>springBoot可以离开SpringCloud独立开发项目，反之不可，是依赖关系</li>
+        <h1 id="Feign负载均衡"><a href="#Feign负载均衡" class="headerlink" title="Feign负载均衡"></a>Feign负载均衡</h1><h2 id="1-Feign是什么"><a href="#1-Feign是什么" class="headerlink" title="1.Feign是什么"></a>1.Feign是什么</h2><p>是一个声明式的Web服务客户端，使编写Web服务客户端变得非常容易。</p>
+<p>只需要创建一个接口，然后在上面添加注解即可。</p>
+<p>在使用Ribbon+RestTemplate时，利用RestTemplate对http请求的封装处理，形成了一套模板化的调用方法。但实际开发中，一个接口可能会被多处调用，所以通常会针对每个微服务自行封装一些客户端类来包装这些依赖服务的调用。所以，Feign在此基础上做了封装，帮助我们定义和实现依赖服务接口的定义。简化使用Ribbon时，自动封装服务调用客户端的开发量。</p>
+<p>Feign集成了Ribbon，利用Ribbon维护了服务列表信息，并通过轮询实现了客户端的负载均衡，而与Ribbon不同的时，通过Feign只需要定义服务绑定接口且以声明式的方法，优雅而简单的实现了服务调用</p>
+<h2 id="2-Feign的构建步骤"><a href="#2-Feign的构建步骤" class="headerlink" title="2.Feign的构建步骤"></a>2.Feign的构建步骤</h2><ul>
+<li>在父工程目录上new一个Maven Module，Packaging选择jar，新建一个Consumer工程</li>
+<li>pom文件新增spring-cloud-starter-feign依赖</li>
+<li>修改Service API公共模块<ul>
+<li>pom文件新增spring-cloud-starter-feign依赖</li>
+<li>新建interface接口，用@FeignClient注解</li>
+<li>maven clean</li>
+<li>maven install</li>
 </ul>
-<h2 id="2-SpringClooud和Dubbo对比"><a href="#2-SpringClooud和Dubbo对比" class="headerlink" title="2.SpringClooud和Dubbo对比"></a>2.SpringClooud和Dubbo对比</h2><table>
-<thead>
-<tr>
-<th></th>
-<th>Dubbo</th>
-<th>SpringCloud</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>服务注册中心</td>
-<td>Zookeeper</td>
-<td>Spring Cloud  Netflix Eureka</td>
-</tr>
-<tr>
-<td>服务调用方式</td>
-<td>RPC</td>
-<td>Rest API</td>
-</tr>
-<tr>
-<td>服务监控</td>
-<td>Dubbo-monitor</td>
-<td>Spring Boot Admin</td>
-</tr>
-<tr>
-<td>断路器</td>
-<td>不完善</td>
-<td>Spring Cloud Netflix Hystrix</td>
-</tr>
-<tr>
-<td>服务网关</td>
-<td>无</td>
-<td>Spring Cloud Netflix Zuul</td>
-</tr>
-<tr>
-<td>分布式配置</td>
-<td>无</td>
-<td>Spring Cloud Config</td>
-</tr>
-<tr>
-<td>服务跟踪</td>
-<td>无</td>
-<td>Spring Cloud Sleuth</td>
-</tr>
-<tr>
-<td>消息总线</td>
-<td>无</td>
-<td>Spring Cloud Bus</td>
-</tr>
-<tr>
-<td>数据流</td>
-<td>无</td>
-<td>Spring Cloud Stream</td>
-</tr>
-<tr>
-<td>批量任务</td>
-<td>无</td>
-<td>Spring Cloud Task</td>
-</tr>
-</tbody></table>
+</li>
+<li>Feign Consumer的Controller不再使用RestTemplate，改为引入API公共模块的interface</li>
+<li>在Feign Consumer的主启动类新增注解@EnableFeignClients，@ComponentScan</li>
+<li>先启动3个Eureka服务，再启动3个Provider服务，最后启动Service Feign</li>
+</ul>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/02/10/SpringCloud%E6%A6%82%E8%BF%B0/" data-id="ck6ksirr8000884v18jjqgwh8" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/02/13/SpringCloud%20Feign/" data-id="ck6ksirr3000484v19c6y2ups" class="article-share-link">Share</a>
       
       
     </footer>
@@ -164,19 +118,19 @@
     
 <nav id="article-nav">
   
-    <a href="/2020/02/10/SpringCloud%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%B7%A5%E7%A8%8B%E6%9E%84%E5%BB%BA/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2020/02/13/SpringCloud%20Hystrix/" id="article-nav-newer" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Newer</strong>
       <div class="article-nav-title">
         
-          SpringCloud微服务工程构建
+          SpringCloud Hystrix
         
       </div>
     </a>
   
   
-    <a href="/2020/02/06/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A6%82%E8%BF%B0/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2020/02/11/SpringCloud%20Ribbon/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">微服务概述</div>
+      <div class="article-nav-title">SpringCloud Ribbon</div>
     </a>
   
 </nav>
